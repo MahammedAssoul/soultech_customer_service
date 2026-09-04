@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-arabic: "Cairo", "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Soultech brand — blue (primary) + orange (accent) */
+  --color-brand-50: #eef4ff;
+  --color-brand-100: #dce7fd;
+  --color-brand-200: #c0d4fc;
+  --color-brand-300: #94b8fa;
+  --color-brand-400: #6192f5;
+  --color-brand-500: #3d6cf0;
+  --color-brand-600: #274ce4;
+  --color-brand-700: #1f3ad1;
+  --color-brand-800: #2032a9;
+  --color-brand-900: #1f3085;
+  --color-brand-950: #182051;
+
+  --color-accent-50: #fff4ed;
+  --color-accent-100: #ffe6d5;
+  --color-accent-200: #fec9aa;
+  --color-accent-300: #fda274;
+  --color-accent-400: #fb6f3c;
+  --color-accent-500: #f94d16;
+  --color-accent-600: #ea330c;
+  --color-accent-700: #c2230c;
+  --color-accent-800: #9a1e12;
+  --color-accent-900: #7c1c12;
+
+  --color-surface: #ffffff;
+  --color-ink: #0f172a;
+  --color-muted: #64748b;
+  --color-line: #e2e8f0;
+  --color-soft: #f8fafc;
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-danger: #dc2626;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100dvh;
+    background-color: #f6f8fc;
+    background-image:
+      radial-gradient(1200px 500px at 50% -150px, rgba(148, 184, 250, 0.18), transparent 70%),
+      radial-gradient(800px 400px at 110% 110%, rgba(249, 173, 116, 0.10), transparent 70%),
+      radial-gradient(600px 350px at -10% 100%, rgba(192, 212, 252, 0.25), transparent 70%);
+    background-attachment: fixed;
+  }
+
+  /* Arabic typography + RTL */
+  html[dir="rtl"] body {
+    font-family: var(--font-arabic);
+    letter-spacing: 0;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-brand-200);
+    color: var(--color-brand-950);
+  }
+}
+
+@layer components {
+  /* ----- Buttons ----- */
+  .btn-primary {
+    @apply flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-brand-600 px-6 text-base font-bold text-white shadow-lg shadow-brand-600/25 transition-all duration-200 hover:bg-brand-700 hover:shadow-brand-700/30 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-secondary {
+    @apply flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl border-2 border-line bg-surface px-6 text-base font-bold text-ink shadow-sm transition-all duration-200 hover:border-brand-300 hover:text-brand-700 active:scale-[0.98];
+  }
+
+  /* ----- Cards ----- */
+  .card {
+    @apply rounded-2xl border border-line/70 bg-surface shadow-sm;
+  }
+  .card-hover {
+    @apply transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-lg hover:shadow-brand-950/5;
+  }
+
+  /* ----- Form controls ----- */
+  .input {
+    @apply w-full rounded-xl border border-line bg-surface px-4 py-3.5 text-base text-ink shadow-sm transition-all duration-150 placeholder:text-muted/60 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500/25;
+  }
+
+  /* ----- Badges ----- */
+  .badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold;
+  }
+
+  /* ----- Branded shells ----- */
+  .page-shell {
+    @apply mx-auto flex min-h-dvh w-full max-w-md flex-col px-5 py-6;
+  }
+}
+
+@layer utilities {
+  .tap-target {
+    min-height: 3rem;
+  }
+}

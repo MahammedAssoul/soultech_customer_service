@@ -1,0 +1,3 @@
+# Cloudflare Pages — SPA fallback
+# Ensures routes like /machine/ST-001 and /track/ST-1042 work when opened directly.
+/* /index.html 200
