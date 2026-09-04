@@ -27,7 +27,7 @@ type LoadState =
       requested: RequestedProduct[]
       machines: MachineWithStats[]
     }
-  | { phase: 'error' }
+  | { phase: 'error'; error?: string }
 
 const ISSUE_TYPE_LABELS: Record<IssueTypeValue, TranslationKey> = {
   product_didnt_come_out: 'issue.type.productDidntComeOut',
@@ -80,6 +80,25 @@ export function AdminPage() {
   const [savingId, setSavingId] = useState<string | null>(null)
   const [updateError, setUpdateError] = useState(false)
   const [creatingMachine, setCreatingMachine] = useState(false)
+  const [adminUid, setAdminUid] = useState<string | null>(null)
+  const [uidCopied, setUidCopied] = useState(false)
+
+  // Read the current anonymous UID (the app's admin identity in Firebase mode)
+  // so admins can grant themselves access via the `admins` collection.
+  useEffect(() => {
+    let cancelled = false
+    requestService
+      .getVoterId()
+      .then((uid) => {
+        if (!cancelled) setAdminUid(uid)
+      })
+      .catch(() => {
+        // ignore — mock mode has no uid concept
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -99,8 +118,11 @@ export function AdminPage() {
       setState({ phase: 'ready', issues, requests, requested, machines })
     }
 
-    load().catch(() => {
-      if (!cancelled) setState({ phase: 'error' })
+    load().catch((err: unknown) => {
+      if (!cancelled) {
+        const message = err instanceof Error ? err.message : String(err)
+        setState({ phase: 'error', error: message })
+      }
     })
 
     return () => {
@@ -311,16 +333,53 @@ export function AdminPage() {
           </Link>
         </div>
 
-        {state.phase === 'loading' && (
+        {state.phase === 'loading' ? (
           <div className="flex flex-col items-center gap-4 py-16">
             <div className="h-10 w-10 animate-spin rounded-full border-4 border-brand-200 border-t-brand-600" />
             <p className="text-sm font-medium text-muted">{t('common.loading')}</p>
           </div>
-        )}
+        ) : state.phase === 'error' && !adminUid ? (
+          <ErrorState
+            onRetry={retry}
+            body={state.error ? `${t('error.title')} — ${state.error}` : undefined}
+          />
+        ) : (
+          <>
+            {/* Admin UID helper — always visible, even in error state, so a fresh
+                anonymous visitor can grant themselves admin access. */}
+            {adminUid && (
+              <div className="mb-4 rounded-2xl border border-brand-200/70 bg-brand-50/60 p-4">
+                <p className="text-sm font-extrabold text-brand-900">{t('admin.uidTitle')}</p>
+                <p className="mt-1 text-xs leading-relaxed text-brand-800">{t('admin.uidBody')}</p>
+                <div className="mt-2 flex items-center gap-2">
+                  <code className="min-w-0 flex-1 truncate rounded-lg bg-white px-2.5 py-1.5 text-xs font-semibold text-brand-900 ring-1 ring-line">
+                    {adminUid}
+                  </code>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard?.writeText(adminUid).catch(() => {})
+                      setUidCopied(true)
+                      window.setTimeout(() => setUidCopied(false), 2000)
+                    }}
+                    className="shrink-0 rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-brand-700"
+                  >
+                    {uidCopied ? t('admin.uidCopied') : t('admin.uidCopy')}
+                  </button>
+                </div>
+              </div>
+            )}
 
-        {state.phase === 'error' && <ErrorState onRetry={retry} />}
+            {state.phase === 'error' && adminUid && (
+              <p
+                role="alert"
+                className="mb-3 rounded-xl bg-danger/10 px-4 py-2.5 text-sm text-danger"
+              >
+                {state.error ?? t('admin.updateFailed')}
+              </p>
+            )}
 
-        {state.phase === 'ready' && (
+            {state.phase === 'ready' && (
           <>
             <div className="mb-4 flex gap-2 rounded-2xl bg-soft p-1" role="tablist">
               {(['issues', 'requests', 'requested', 'machines'] as Tab[]).map((key) => (
@@ -484,6 +543,8 @@ export function AdminPage() {
               </div>
             )}
           </>
+            )}
+          </>
         )}
       </div>
     </PageLayout>
@@ -611,7 +672,8 @@ function MachineRow({ machine, busy, onSave, onDelete }: MachineRowProps) {
         <div className="min-w-0">
           <p className="text-sm font-bold text-ink">
             {machine.machine_code}
-            <span className="ms-1.5 text-xs font-semibold text-muted">{machine.name}</span>
+            <span className="mx-1.5 text-muted">-</span>
+            <span className="text-xs font-semibold text-muted">{machine.name}</span>
           </p>
           {machine.name_ar && (
             <p className="mt-0.5 text-xs font-semibold text-muted" dir="rtl">
@@ -707,7 +769,7 @@ function RequestedProductEditor({
     if (!file) return
     setUploading(true)
     setPhotoError(false)
-    const result = await photoService.uploadCustomerPhoto(file)
+    const result = await photoService.uploadAdminPhoto(file)
     setUploading(false)
 
     if (result.ok) {

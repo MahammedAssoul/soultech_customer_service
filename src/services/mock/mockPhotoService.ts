@@ -24,3 +24,8 @@ export async function uploadCustomerPhoto(file: File): Promise<PhotoResult> {
     return { ok: false, error: 'compress_failed' }
   }
 }
+
+/** Mock admin photo upload — mirrors uploadCustomerPhoto locally. */
+export async function uploadAdminPhoto(file: File): Promise<PhotoResult> {
+  return uploadCustomerPhoto(file)
+}

@@ -113,7 +113,7 @@ function persistVotes(): void {
 }
 
 /** Get (or create) the anonymous voter id stored in localStorage. */
-export function getVoterId(): string {
+export async function getVoterId(): Promise<string> {
   if (typeof window === 'undefined') return 'voter_ssr'
   try {
     const existing = window.localStorage.getItem(VOTER_KEY)

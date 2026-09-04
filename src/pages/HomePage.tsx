@@ -30,7 +30,7 @@ export function HomePage() {
   /** Machine label shown in the dropdown: Arabic name when in Arabic mode. */
   const displayName = (machine: Machine): string => {
     if (language === 'ar') return machine.name_ar ?? machine.name
-    return machine.location ?? machine.name
+    return machine.name
   }
 
   useEffect(() => {
@@ -150,7 +150,7 @@ export function HomePage() {
                   {loadState.machines.map((machine) => (
                     <option key={machine.id} value={machine.machine_code} className="text-ink">
                       {machine.machine_code}
-                      {machine.location ? ` — ${displayName(machine)}` : ''}
+                      {machine.location ? ` — ${displayName(machine)} (${machine.location})` : ''}
                     </option>
                   ))}
                 </select>

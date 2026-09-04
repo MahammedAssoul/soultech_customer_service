@@ -1,0 +1,43 @@
+rules_version = '2';
+
+// Soultech Vending — Firebase Storage Security Rules
+//
+// Customers can upload issue photos to the issues/ folder (their own UID
+// subfolder). Admin-controlled assets (requested product photos, machine
+// images, etc.) are write-protected except for admins.
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // NOTE: use the named Firestore database (soultech-support), NOT (default)
+    function isAdmin() {
+      return request.auth != null &&
+        firestore.exists(/databases/(soultech-support)/documents/admins/$(request.auth.uid));
+    }
+
+    // Anyone (signed in) can read public content.
+    match /{allPaths=**} {
+      allow read: if request.auth != null;
+    }
+
+    // Customers upload issue photos into issues/{uid}/...
+    match /issues/{uid}/{fileName} {
+      allow write: if request.auth != null &&
+        request.auth.uid == uid &&
+        request.resource.size < 8 * 1024 * 1024 && // 8 MB
+        request.resource.contentType.matches('image/.*');
+    }
+
+    // Admin-controlled assets: requested product photos, machine images,
+    // anything else. Only admins can write.
+    match /requestedProducts/{allPaths=**} {
+      allow write: if isAdmin();
+    }
+    match /machines/{allPaths=**} {
+      allow write: if isAdmin();
+    }
+    match /products/{allPaths=**} {
+      allow write: if isAdmin();
+    }
+  }
+}

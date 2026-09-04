@@ -1,0 +1,5 @@
+{
+  "comment": "No composite indexes are required. All queries use single-field filters only (auto-indexed by Firestore); ordering is done in memory by the service layer.",
+  "indexes": [],
+  "fieldOverrides": []
+}

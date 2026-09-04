@@ -1,0 +1,17 @@
+[
+  {
+    "origin": [
+      "http://localhost:5199",
+      "https://localhost:5199",
+      "https://soultech-support.web.app",
+      "https://soultech-support.firebaseapp.com"
+    ],
+    "method": ["GET", "PUT", "POST", "DELETE", "HEAD"],
+    "responseHeader": [
+      "Content-Type",
+      "Content-Length",
+      "x-goog-*"
+    ],
+    "maxAgeSeconds": 3600
+  }
+]

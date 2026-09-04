@@ -155,6 +155,10 @@ export type TranslationKey =
   | 'admin.passcode.cancel'
   | 'admin.back'
   | 'admin.logout'
+  | 'admin.uidTitle'
+  | 'admin.uidBody'
+  | 'admin.uidCopy'
+  | 'admin.uidCopied'
   | 'admin.tab.issues'
   | 'admin.tab.requests'
   | 'admin.tab.requested'
@@ -368,6 +372,10 @@ export const translations: Record<Language, Translation> = {
     'admin.passcode.cancel': 'Cancel',
     'admin.back': 'Back to home',
     'admin.logout': 'Lock & exit',
+    'admin.uidTitle': 'Admin access — one-time setup',
+    'admin.uidBody': 'Copy your admin UID, then add it to the `admins` collection in Firestore (document id = this UID). Then reload to manage machines here.',
+    'admin.uidCopy': 'Copy UID',
+    'admin.uidCopied': 'Copied!',
     'admin.tab.issues': 'Issues',
     'admin.tab.requests': 'Requests',
     'admin.tab.requested': 'Requested Products',
@@ -578,6 +586,10 @@ export const translations: Record<Language, Translation> = {
     'admin.passcode.cancel': 'إلغاء',
     'admin.back': 'العودة إلى الرئيسية',
     'admin.logout': 'قفل وخروج',
+    'admin.uidTitle': 'صلاحية المسؤول — إعداد لمرة واحدة',
+    'admin.uidBody': 'انسخ معرف المسؤول، ثم أضفه إلى مجموعة `admins` في Firestore (معرف المستند = هذا المعرف). ثم أعد التحميل لإدارة الآلات هنا.',
+    'admin.uidCopy': 'نسخ المعرف',
+    'admin.uidCopied': 'تم النسخ!',
     'admin.tab.issues': 'المشاكل',
     'admin.tab.requests': 'الطلبات',
     'admin.tab.requested': 'المنتجات المطلوبة',
