@@ -35,9 +35,40 @@ export interface Machine {
   id: string
   machine_code: string
   name: string
+  /** Arabic display name shown to customers when the app language is Arabic. */
+  name_ar: string | null
   location: string | null
   is_active: boolean
   created_at: string
+}
+
+/** A machine plus its visitor count, used in the admin panel. */
+export interface MachineWithStats extends Machine {
+  visitor_count: number
+}
+
+/** Admin-only creation of a machine. */
+export interface NewMachineInput {
+  machine_code: string
+  name: string
+  name_ar?: string | null
+  location?: string | null
+  is_active?: boolean
+}
+
+/** Admin-only updates to a machine. */
+export interface UpdateMachineInput {
+  machine_code?: string
+  name?: string
+  name_ar?: string | null
+  location?: string | null
+  is_active?: boolean
+}
+
+/** Public payload recorded when a customer opens a machine page. */
+export interface MachineVisit {
+  machine_id: string
+  visited_at: string
 }
 
 export interface Product {
@@ -139,4 +170,11 @@ export interface ProductVote {
   product_request_id: string
   voter_id: string
   created_at: string
+}
+
+/** Admin-only updates to a requested product (status, note, photo). */
+export interface UpdateRequestedProductInput {
+  status?: RequestedProductStatus
+  admin_note?: string | null
+  photo_url?: string | null
 }

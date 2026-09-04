@@ -34,6 +34,31 @@ export const machineService = {
       () => import('./mock/mockMachineService'),
       () => import('./supabase/machineService'),
     ).then((m) => m.getMachineById(...args)),
+  getAllMachines: (...args: Parameters<typeof import('./mock/mockMachineService')['getAllMachines']>) =>
+    load(
+      () => import('./mock/mockMachineService'),
+      () => import('./supabase/machineService'),
+    ).then((m) => m.getAllMachines(...args)),
+  createMachine: (...args: Parameters<typeof import('./mock/mockMachineService')['createMachine']>) =>
+    load(
+      () => import('./mock/mockMachineService'),
+      () => import('./supabase/machineService'),
+    ).then((m) => m.createMachine(...args)),
+  updateMachine: (...args: Parameters<typeof import('./mock/mockMachineService')['updateMachine']>) =>
+    load(
+      () => import('./mock/mockMachineService'),
+      () => import('./supabase/machineService'),
+    ).then((m) => m.updateMachine(...args)),
+  deleteMachine: (...args: Parameters<typeof import('./mock/mockMachineService')['deleteMachine']>) =>
+    load(
+      () => import('./mock/mockMachineService'),
+      () => import('./supabase/machineService'),
+    ).then((m) => m.deleteMachine(...args)),
+  recordMachineVisit: (...args: Parameters<typeof import('./mock/mockMachineService')['recordMachineVisit']>) =>
+    load(
+      () => import('./mock/mockMachineService'),
+      () => import('./supabase/machineService'),
+    ).then((m) => m.recordMachineVisit(...args)),
 }
 
 export const productService = {
@@ -113,6 +138,11 @@ export const requestService = {
       () => import('./mock/mockRequestService'),
       () => import('./supabase/requestService'),
     ).then((m) => m.getRequestedProducts(...args)),
+  getAllRequestedProducts: (...args: Parameters<typeof import('./mock/mockRequestService')['getAllRequestedProducts']>) =>
+    load(
+      () => import('./mock/mockRequestService'),
+      () => import('./supabase/requestService'),
+    ).then((m) => m.getAllRequestedProducts(...args)),
   getRequestedProductById: (...args: Parameters<typeof import('./mock/mockRequestService')['getRequestedProductById']>) =>
     load(
       () => import('./mock/mockRequestService'),
@@ -128,6 +158,11 @@ export const requestService = {
       () => import('./mock/mockRequestService'),
       () => import('./supabase/requestService'),
     ).then((m) => m.createRequestedProduct(...args)),
+  updateRequestedProduct: (...args: Parameters<typeof import('./mock/mockRequestService')['updateRequestedProduct']>) =>
+    load(
+      () => import('./mock/mockRequestService'),
+      () => import('./supabase/requestService'),
+    ).then((m) => m.updateRequestedProduct(...args)),
   voteForProduct: (...args: Parameters<typeof import('./mock/mockRequestService')['voteForProduct']>) =>
     load(
       () => import('./mock/mockRequestService'),

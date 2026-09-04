@@ -57,7 +57,7 @@ export async function getIssueByReference(
   const machine = (await getMachineById(issue.machine_id)) as Machine | null
   return {
     ...issue,
-    machines: machine ? { id: machine.id, machine_code: machine.machine_code, name: machine.name, location: machine.location, is_active: machine.is_active, created_at: machine.created_at } : null,
+    machines: machine ? { ...machine } : null,
   }
 }
 

@@ -11,10 +11,10 @@ import { translations, type Language } from './translations'
 const STORAGE_KEY = 'soultech-language'
 
 function getInitialLanguage(): Language {
-  if (typeof window === 'undefined') return 'en'
+  if (typeof window === 'undefined') return 'ar'
   const stored = window.localStorage.getItem(STORAGE_KEY)
   if (stored === 'en' || stored === 'ar') return stored
-  return 'en'
+  return 'ar'
 }
 
 export function I18nProvider({ children }: { children: ReactNode }) {

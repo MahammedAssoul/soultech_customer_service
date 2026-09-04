@@ -145,6 +145,69 @@ export type TranslationKey =
   | 'common.retry'
   | 'common.contactSupport'
   | 'common.footer'
+  | 'admin.title'
+  | 'admin.subtitle'
+  | 'admin.passcode.title'
+  | 'admin.passcode.subtitle'
+  | 'admin.passcode.placeholder'
+  | 'admin.passcode.submit'
+  | 'admin.passcode.error'
+  | 'admin.passcode.cancel'
+  | 'admin.back'
+  | 'admin.logout'
+  | 'admin.tab.issues'
+  | 'admin.tab.requests'
+  | 'admin.tab.requested'
+  | 'admin.empty.issues'
+  | 'admin.empty.requests'
+  | 'admin.empty.requested'
+  | 'admin.machine'
+  | 'admin.product'
+  | 'admin.issueType'
+  | 'admin.description'
+  | 'admin.phone'
+  | 'admin.date'
+  | 'admin.status'
+  | 'admin.actions'
+  | 'admin.save'
+  | 'admin.saving'
+  | 'admin.saved'
+  | 'admin.noteLabel'
+  | 'admin.notePlaceholder'
+  | 'admin.votes'
+  | 'admin.photo'
+  | 'admin.noPhoto'
+  | 'admin.photoAdd'
+  | 'admin.photoChange'
+  | 'admin.photoRemove'
+  | 'admin.photoUploading'
+  | 'admin.updateFailed'
+  | 'admin.tab.machines'
+  | 'admin.empty.machines'
+  | 'admin.machines.addTitle'
+  | 'admin.machines.add'
+  | 'admin.machines.edit'
+  | 'admin.machines.delete'
+  | 'admin.machines.deleteConfirm'
+  | 'admin.machines.code'
+  | 'admin.machines.name'
+  | 'admin.machines.namePlaceholder'
+  | 'admin.machines.nameAr'
+  | 'admin.machines.nameArPlaceholder'
+  | 'admin.machines.location'
+  | 'admin.machines.locationPlaceholder'
+  | 'admin.machines.visible'
+  | 'admin.machines.active'
+  | 'admin.machines.inactive'
+  | 'admin.machines.visitors'
+  | 'contact.title'
+  | 'contact.subtitle'
+  | 'contact.call'
+  | 'contact.callHint'
+  | 'contact.whatsapp'
+  | 'contact.whatsappHint'
+  | 'contact.email'
+  | 'contact.emailHint'
 
 export type Translation = Record<TranslationKey, string>
 
@@ -295,6 +358,69 @@ export const translations: Record<Language, Translation> = {
     'common.retry': 'Retry',
     'common.contactSupport': 'Contact Soultech support',
     'common.footer': 'Soultech Vending — Customer Support',
+    'admin.title': 'Admin Panel',
+    'admin.subtitle': 'Manage customer issues and product requests.',
+    'admin.passcode.title': 'Admin Access',
+    'admin.passcode.subtitle': 'Enter the admin passcode to continue.',
+    'admin.passcode.placeholder': 'Passcode',
+    'admin.passcode.submit': 'Unlock',
+    'admin.passcode.error': 'Incorrect passcode. Please try again.',
+    'admin.passcode.cancel': 'Cancel',
+    'admin.back': 'Back to home',
+    'admin.logout': 'Lock & exit',
+    'admin.tab.issues': 'Issues',
+    'admin.tab.requests': 'Requests',
+    'admin.tab.requested': 'Requested Products',
+    'admin.empty.issues': 'No issues reported yet.',
+    'admin.empty.requests': 'No product requests yet.',
+    'admin.empty.requested': 'No requested products yet.',
+    'admin.machine': 'Machine',
+    'admin.product': 'Product',
+    'admin.issueType': 'Issue type',
+    'admin.description': 'Description',
+    'admin.phone': 'Phone',
+    'admin.date': 'Date',
+    'admin.status': 'Status',
+    'admin.actions': 'Actions',
+    'admin.save': 'Save',
+    'admin.saving': 'Saving...',
+    'admin.saved': 'Saved',
+    'admin.noteLabel': 'Admin note',
+    'admin.notePlaceholder': 'Add a note for customers...',
+    'admin.votes': 'votes',
+    'admin.photo': 'Photo',
+    'admin.noPhoto': 'No photo',
+    'admin.photoAdd': 'Add photo',
+    'admin.photoChange': 'Change photo',
+    'admin.photoRemove': 'Remove photo',
+    'admin.photoUploading': 'Uploading photo...',
+    'admin.updateFailed': 'Could not save changes. Please try again.',
+    'admin.tab.machines': 'Machines',
+    'admin.empty.machines': 'No machines yet.',
+    'admin.machines.addTitle': 'Add a machine',
+    'admin.machines.add': 'Add machine',
+    'admin.machines.edit': 'Edit machine',
+    'admin.machines.delete': 'Delete machine',
+    'admin.machines.deleteConfirm': 'Delete this machine? This cannot be undone.',
+    'admin.machines.code': 'Machine code',
+    'admin.machines.name': 'Machine name',
+    'admin.machines.namePlaceholder': 'e.g. ST-007',
+    'admin.machines.nameAr': 'Arabic name',
+    'admin.machines.nameArPlaceholder': 'e.g. المدخل الرئيسي (optional)',
+    'admin.machines.location': 'Location',
+    'admin.machines.locationPlaceholder': 'e.g. Second Floor (optional)',
+    'admin.machines.visible': 'Visible to customers',
+    'admin.machines.active': 'Active',
+    'admin.machines.inactive': 'Hidden',
+    'admin.machines.visitors': 'visitors',
+    'contact.title': 'Contact Us',
+    'contact.subtitle': 'Reach out to us anytime — we\'re happy to help.',
+    'contact.call': 'Call us',
+    'contact.callHint': 'Speak to our support team',
+    'contact.whatsapp': 'WhatsApp',
+    'contact.whatsappHint': 'Chat with us on WhatsApp',
+    'contact.email': 'Email us',
+    'contact.emailHint': 'Send us an email',
   },
   ar: {
     'brand.name': 'Soultech Vending',
@@ -442,5 +568,68 @@ export const translations: Record<Language, Translation> = {
     'common.retry': 'إعادة المحاولة',
     'common.contactSupport': 'الاتصال بدعم Soultech',
     'common.footer': 'Soultech Vending — دعم العملاء',
+    'admin.title': 'لوحة التحكم',
+    'admin.subtitle': 'إدارة مشاكل العملاء وطلبات المنتجات.',
+    'admin.passcode.title': 'دخول المسؤول',
+    'admin.passcode.subtitle': 'أدخل رمز المسؤول للمتابعة.',
+    'admin.passcode.placeholder': 'رمز الدخول',
+    'admin.passcode.submit': 'فتح',
+    'admin.passcode.error': 'رمز غير صحيح. يرجى المحاولة مرة أخرى.',
+    'admin.passcode.cancel': 'إلغاء',
+    'admin.back': 'العودة إلى الرئيسية',
+    'admin.logout': 'قفل وخروج',
+    'admin.tab.issues': 'المشاكل',
+    'admin.tab.requests': 'الطلبات',
+    'admin.tab.requested': 'المنتجات المطلوبة',
+    'admin.empty.issues': 'لا توجد مشاكل مبلّغ عنها بعد.',
+    'admin.empty.requests': 'لا توجد طلبات منتجات بعد.',
+    'admin.empty.requested': 'لا توجد منتجات مطلوبة بعد.',
+    'admin.machine': 'الآلة',
+    'admin.product': 'المنتج',
+    'admin.issueType': 'نوع المشكلة',
+    'admin.description': 'الوصف',
+    'admin.phone': 'الهاتف',
+    'admin.date': 'التاريخ',
+    'admin.status': 'الحالة',
+    'admin.actions': 'إجراءات',
+    'admin.save': 'حفظ',
+    'admin.saving': 'جارٍ الحفظ...',
+    'admin.saved': 'تم الحفظ',
+    'admin.noteLabel': 'ملاحظة المسؤول',
+    'admin.notePlaceholder': 'أضف ملاحظة للعملاء...',
+    'admin.votes': 'تصويت',
+    'admin.photo': 'الصورة',
+    'admin.noPhoto': 'لا توجد صورة',
+    'admin.photoAdd': 'إضافة صورة',
+    'admin.photoChange': 'تغيير الصورة',
+    'admin.photoRemove': 'إزالة الصورة',
+    'admin.photoUploading': 'جارٍ رفع الصورة...',
+    'admin.updateFailed': 'تعذر حفظ التغييرات. يرجى المحاولة مرة أخرى.',
+    'admin.tab.machines': 'الآلات',
+    'admin.empty.machines': 'لا توجد آلات بعد.',
+    'admin.machines.addTitle': 'إضافة آلة',
+    'admin.machines.add': 'إضافة آلة',
+    'admin.machines.edit': 'تعديل الآلة',
+    'admin.machines.delete': 'حذف الآلة',
+    'admin.machines.deleteConfirm': 'حذف هذه الآلة؟ لا يمكن التراجع عن هذا الإجراء.',
+    'admin.machines.code': 'رمز الآلة',
+    'admin.machines.name': 'اسم الآلة',
+    'admin.machines.namePlaceholder': 'مثال: ST-007',
+    'admin.machines.nameAr': 'الاسم بالعربية',
+    'admin.machines.nameArPlaceholder': 'مثال: المدخل الرئيسي (اختياري)',
+    'admin.machines.location': 'الموقع',
+    'admin.machines.locationPlaceholder': 'مثال: الطابق الثاني (اختياري)',
+    'admin.machines.visible': 'ظاهرة للعملاء',
+    'admin.machines.active': 'نشطة',
+    'admin.machines.inactive': 'مخفية',
+    'admin.machines.visitors': 'زائر',
+    'contact.title': 'تواصل معنا',
+    'contact.subtitle': 'تواصل معنا في أي وقت — يسعدنا مساعدتك.',
+    'contact.call': 'اتصل بنا',
+    'contact.callHint': 'تحدث مع فريق الدعم',
+    'contact.whatsapp': 'واتساب',
+    'contact.whatsappHint': 'راسلنا عبر واتساب',
+    'contact.email': 'راسلنا',
+    'contact.emailHint': 'أرسل لنا بريداً إلكترونياً',
   },
 }

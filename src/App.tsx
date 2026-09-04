@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { I18nProvider } from './i18n/I18nProvider'
+import { AdminPage } from './pages/AdminPage'
 import { HomePage } from './pages/HomePage'
 import { IssuePage } from './pages/IssuePage'
 import { MachinePage } from './pages/MachinePage'
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/machine/:machineId/request" element={<RequestPage />} />
           <Route path="/machine/:machineId/request/new" element={<RequestNewProductPage />} />
           <Route path="/track/:reference" element={<TrackPage />} />
+          <Route path="/admin" element={<AdminPage />} />
           <Route path="*" element={<HomePage />} />
         </Routes>
       </BrowserRouter>

@@ -6,6 +6,7 @@ import type {
   ProductRequestWithMachine,
   ProductVote,
   RequestedProduct,
+  UpdateRequestedProductInput,
 } from '../../types'
 
 // ---------------------------------------------------------------------------
@@ -78,6 +79,17 @@ export async function getRequestedProducts(machineId: string): Promise<Requested
   return data ?? []
 }
 
+/** All requested products across every machine (admin view). */
+export async function getAllRequestedProducts(): Promise<RequestedProduct[]> {
+  const { data, error } = await getSupabase()
+    .from('requested_products')
+    .select('*')
+    .order('vote_count', { ascending: false })
+
+  if (error) throw error
+  return data ?? []
+}
+
 export async function getRequestedProductById(
   id: string,
 ): Promise<RequestedProduct | null> {
@@ -129,6 +141,22 @@ export async function createRequestedProduct(
   const { data, error } = await getSupabase()
     .from('requested_products')
     .insert({ ...input, vote_count: 0, status: 'new' })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+/** Admin-only update of a requested product (status and/or admin note). */
+export async function updateRequestedProduct(
+  id: string,
+  input: UpdateRequestedProductInput,
+): Promise<RequestedProduct | null> {
+  const { data, error } = await getSupabase()
+    .from('requested_products')
+    .update(input)
+    .eq('id', id)
     .select()
     .single()
 

@@ -8,6 +8,7 @@ import type {
   ProductRequestWithMachine,
   ProductVote,
   RequestedProduct,
+  UpdateRequestedProductInput,
 } from '../../types'
 import { getMachineById } from './mockMachineService'
 
@@ -146,16 +147,7 @@ export async function getProductRequestByReference(
   const machine = (await getMachineById(request.machine_id)) as Machine | null
   return {
     ...request,
-    machines: machine
-      ? {
-          id: machine.id,
-          machine_code: machine.machine_code,
-          name: machine.name,
-          location: machine.location,
-          is_active: machine.is_active,
-          created_at: machine.created_at,
-        }
-      : null,
+    machines: machine ? { ...machine } : null,
   }
 }
 
@@ -210,6 +202,14 @@ export async function getRequestedProducts(machineId: string): Promise<Requested
     .map((rp) => ({ ...rp }))
 }
 
+/** All requested products across every machine (admin view). */
+export async function getAllRequestedProducts(): Promise<RequestedProduct[]> {
+  await delay(300)
+  return requestedProducts
+    .sort((a, b) => b.vote_count - a.vote_count)
+    .map((rp) => ({ ...rp }))
+}
+
 export async function getRequestedProductById(
   id: string,
 ): Promise<RequestedProduct | null> {
@@ -257,6 +257,22 @@ export async function createRequestedProduct(
   }
 
   requestedProducts = [requested, ...requestedProducts]
+  persistRequested()
+  return { ...requested }
+}
+
+/** Admin-only update of a requested product (status and/or admin note). */
+export async function updateRequestedProduct(
+  id: string,
+  input: UpdateRequestedProductInput,
+): Promise<RequestedProduct | null> {
+  await delay(300)
+  const requested = requestedProducts.find((rp) => rp.id === id)
+  if (!requested) return null
+
+  if (input.status !== undefined) requested.status = input.status
+  if (input.admin_note !== undefined) requested.admin_note = input.admin_note
+  if (input.photo_url !== undefined) requested.photo_url = input.photo_url
   persistRequested()
   return { ...requested }
 }

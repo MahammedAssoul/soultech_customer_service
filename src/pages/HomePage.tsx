@@ -1,5 +1,7 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { AdminPasscodeModal } from '../components/AdminPasscodeModal'
+import { ContactUs } from '../components/ContactUs'
 import { PageLayout } from '../components/PageLayout'
 import { MachineSkeleton } from '../components/LoadingState'
 import { useI18n } from '../i18n/useI18n'
@@ -7,18 +9,29 @@ import { machineService } from '../services'
 import squaredLogo from '../assets/squared_logo.png'
 import type { Machine } from '../types'
 
+/** Number of taps on the logo required to reveal the admin passcode prompt. */
+const LOGO_TAPS_TO_UNLOCK = 5
+
 type LoadState =
   | { phase: 'loading' }
   | { phase: 'ready'; machines: Machine[] }
   | { phase: 'error' }
 
 export function HomePage() {
-  const { t } = useI18n()
+  const { t, language } = useI18n()
   const navigate = useNavigate()
   const [loadState, setLoadState] = useState<LoadState>({ phase: 'loading' })
   const [machineCode, setMachineCode] = useState('')
   const [error, setError] = useState(false)
   const [attempt, setAttempt] = useState(0)
+  const logoTaps = useRef(0)
+  const [passcodeOpen, setPasscodeOpen] = useState(false)
+
+  /** Machine label shown in the dropdown: Arabic name when in Arabic mode. */
+  const displayName = (machine: Machine): string => {
+    if (language === 'ar') return machine.name_ar ?? machine.name
+    return machine.location ?? machine.name
+  }
 
   useEffect(() => {
     let cancelled = false
@@ -52,16 +65,35 @@ export function HomePage() {
     navigate(`/machine/${encodeURIComponent(machineCode)}`)
   }
 
+  const handleLogoTap = () => {
+    logoTaps.current += 1
+    if (logoTaps.current >= LOGO_TAPS_TO_UNLOCK) {
+      logoTaps.current = 0
+      setPasscodeOpen(true)
+    }
+  }
+
   return (
     <PageLayout>
+      <AdminPasscodeModal
+        open={passcodeOpen}
+        onUnlock={() => navigate('/admin')}
+        onCancel={() => setPasscodeOpen(false)}
+      />
+
       <div className="flex flex-1 flex-col items-center justify-center py-8 text-center">
-        <span className="flex h-28 w-28 items-center justify-center rounded-[2rem] bg-white p-2 shadow-xl shadow-brand-600/20 ring-1 ring-line">
+        <button
+          type="button"
+          onClick={handleLogoTap}
+          aria-label="Soultech Vending logo"
+          className="flex h-28 w-28 cursor-default items-center justify-center rounded-[2rem] bg-white p-2 shadow-xl shadow-brand-600/20 ring-1 ring-line transition-transform active:scale-95"
+        >
           <img
             src={squaredLogo}
             alt="Soultech Vending logo"
             className="h-full w-full rounded-[1.6rem] object-contain"
           />
-        </span>
+        </button>
 
         <h1 className="mt-6 text-3xl font-extrabold tracking-tight text-ink">
           {t('home.title')}
@@ -118,7 +150,7 @@ export function HomePage() {
                   {loadState.machines.map((machine) => (
                     <option key={machine.id} value={machine.machine_code} className="text-ink">
                       {machine.machine_code}
-                      {machine.location ? ` — ${machine.location}` : ''}
+                      {machine.location ? ` — ${displayName(machine)}` : ''}
                     </option>
                   ))}
                 </select>
@@ -163,6 +195,8 @@ export function HomePage() {
             </form>
           )}
         </div>
+
+        <ContactUs />
       </div>
     </PageLayout>
   )

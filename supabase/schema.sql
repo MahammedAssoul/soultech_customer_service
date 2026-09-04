@@ -9,6 +9,7 @@ create table if not exists public.machines (
   id uuid primary key default gen_random_uuid(),
   machine_code text not null unique,
   name text not null,
+  name_ar text,
   location text,
   is_active boolean not null default true,
   created_at timestamptz not null default now()

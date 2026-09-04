@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ActionCard } from '../components/ActionCard'
 import { ErrorState } from '../components/ErrorState'
@@ -20,6 +20,9 @@ export function MachinePage() {
   const { t } = useI18n()
   const [state, setState] = useState<LoadState>({ phase: 'loading' })
   const [attempt, setAttempt] = useState(0)
+  // StrictMode double-invocates effects in dev; this ref ensures the visit is
+  // recorded at most once per machine page load.
+  const visitRecorded = useRef(false)
 
   useEffect(() => {
     let cancelled = false
@@ -43,6 +46,15 @@ export function MachinePage() {
     setState({ phase: 'loading' })
     setAttempt((a) => a + 1)
   }
+
+  useEffect(() => {
+    if (state.phase !== 'ready' || visitRecorded.current) return
+    visitRecorded.current = true
+
+    machineService.recordMachineVisit(state.machine.id).catch(() => {
+      // Visitor tracking is best-effort; failure must not disrupt the page.
+    })
+  }, [state])
 
   return (
     <PageLayout>
