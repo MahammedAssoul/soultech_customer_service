@@ -4,7 +4,7 @@ import { ErrorState } from '../components/ErrorState'
 import { PageLayout } from '../components/PageLayout'
 import { useI18n } from '../i18n/useI18n'
 import type { TranslationKey } from '../i18n/translations'
-import { issueService, machineService, requestService } from '../services'
+import { adminService, issueService, machineService, requestService } from '../services'
 import { photoService } from '../services/photoService'
 import type {
   CustomerIssue,
@@ -16,7 +16,7 @@ import type {
   RequestedProductStatus,
 } from '../types'
 
-type Tab = 'issues' | 'requests' | 'requested' | 'machines'
+type Tab = 'issues' | 'requests' | 'requested' | 'machines' | 'admins'
 
 type LoadState =
   | { phase: 'loading' }
@@ -62,6 +62,8 @@ const REQUEST_STATUS_OPTIONS: ProductRequest['status'][] = ['new', 'in_progress'
 function formatDate(iso: string): string {
   const date = new Date(iso)
   if (Number.isNaN(date.getTime())) return iso
+  // Hide epoch placeholder dates (missing createdAt on legacy admin docs).
+  if (date.getFullYear() <= 1970) return ''
   return date.toLocaleString(undefined, {
     year: 'numeric',
     month: 'short',
@@ -382,7 +384,7 @@ export function AdminPage() {
             {state.phase === 'ready' && (
           <>
             <div className="mb-4 flex gap-2 rounded-2xl bg-soft p-1" role="tablist">
-              {(['issues', 'requests', 'requested', 'machines'] as Tab[]).map((key) => (
+              {(['issues', 'requests', 'requested', 'machines', 'admins'] as Tab[]).map((key) => (
                 <button
                   key={key}
                   type="button"
@@ -542,6 +544,8 @@ export function AdminPage() {
                 ))}
               </div>
             )}
+
+            {tab === 'admins' && <AdminAccessPanel />}
           </>
             )}
           </>
@@ -740,6 +744,170 @@ function MachineRow({ machine, busy, onSave, onDelete }: MachineRowProps) {
           {t('admin.machines.edit')}
         </button>
       )}
+    </div>
+  )
+}
+
+interface AdminRecord {
+  uid: string
+  created_at: string
+}
+
+/**
+ * Admin access management: shows the current device's UID, lets admins add
+ * another admin UID (e.g. their phone's anonymous UID) and revoke access.
+ */
+function AdminAccessPanel() {
+  const { t } = useI18n()
+  const [myUid, setMyUid] = useState<string | null>(null)
+  const [admins, setAdmins] = useState<AdminRecord[]>([])
+  const [newUid, setNewUid] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [failed, setFailed] = useState(false)
+  const [adding, setAdding] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    Promise.all([adminService.getAdminUid(), adminService.listAdmins()])
+      .then(([uid, list]) => {
+        if (cancelled) return
+        setMyUid(uid)
+        setAdmins(list)
+      })
+      .catch(() => {
+        if (!cancelled) setFailed(true)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [adding])
+
+  const handleAdd = async () => {
+    const uid = newUid.trim()
+    if (!uid || busy) return
+    setBusy(true)
+    setFailed(false)
+    try {
+      await adminService.addAdmin(uid)
+      setNewUid('')
+      setAdding((a) => !a)
+    } catch {
+      setFailed(true)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const handleRemove = async (uid: string) => {
+    if (busy) return
+    setBusy(true)
+    setFailed(false)
+    try {
+      await adminService.removeAdmin(uid)
+      setAdding((a) => !a)
+    } catch {
+      setFailed(true)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <div className="space-y-3">
+      <div className="card p-4">
+        <p className="text-sm font-extrabold text-ink">{t('admin.admins.title')}</p>
+        <p className="mt-0.5 text-sm text-muted">{t('admin.admins.subtitle')}</p>
+      </div>
+
+      {/* This device */}
+      <div className="card p-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+          {t('admin.admins.current')}
+        </p>
+        <code className="mt-1.5 block truncate rounded-lg bg-soft px-3 py-2 text-xs font-semibold text-ink">
+          {myUid ?? '…'}
+        </code>
+        <p className="mt-1 text-xs text-muted">
+          {t('admin.admins.addLabel')}:{' '}
+          <span dir="ltr" className="font-semibold text-ink">{myUid ?? '…'}</span>
+        </p>
+      </div>
+
+      {/* Add admin */}
+      <div className="card p-4">
+        <p className="text-sm font-bold text-ink">{t('admin.admins.addLabel')}</p>
+        <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+          <input
+            type="text"
+            dir="ltr"
+            value={newUid}
+            onChange={(e) => {
+              setNewUid(e.target.value)
+              if (failed) setFailed(false)
+            }}
+            placeholder={t('admin.admins.addPlaceholder')}
+            className="input min-w-0 flex-1 font-mono text-xs"
+          />
+          <button
+            type="button"
+            onClick={() => void handleAdd()}
+            disabled={busy || newUid.trim() === ''}
+            className="btn-primary !min-h-10 !px-4 !py-2 text-sm"
+          >
+            {busy ? t('admin.admins.adding') : t('admin.admins.add')}
+          </button>
+        </div>
+        {failed && (
+          <p role="alert" className="mt-2 text-sm text-danger">
+            {t('admin.admins.failed')}
+          </p>
+        )}
+      </div>
+
+      {/* Admin list */}
+      <div className="card p-4">
+        <p className="text-sm font-bold text-ink">{t('admin.tab.admins')}</p>
+        {admins.length === 0 && (
+          <p className="mt-2 rounded-xl bg-soft px-4 py-3 text-sm text-muted">
+            {t('admin.admins.empty')}
+          </p>
+        )}
+        <div className="mt-2 space-y-2">
+          {admins.map((admin) => {
+            const isMe = admin.uid === myUid
+            return (
+              <div
+                key={admin.uid}
+                className="flex items-center justify-between gap-3 rounded-xl bg-soft px-3 py-2"
+              >
+                <div className="min-w-0">
+                  <code className="block truncate text-xs font-semibold text-ink" dir="ltr">
+                    {admin.uid}
+                  </code>
+                  <p className="mt-0.5 text-xs text-muted">
+                    {formatDate(admin.created_at)}
+                    {isMe ? ` · ${t('admin.admins.you')}` : ''}
+                  </p>
+                </div>
+                {!isMe && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (window.confirm(t('admin.admins.removeConfirm'))) {
+                        void handleRemove(admin.uid)
+                      }
+                    }}
+                    disabled={busy}
+                    className="shrink-0 text-sm font-semibold text-danger hover:underline"
+                  >
+                    {t('admin.admins.remove')}
+                  </button>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
     </div>
   )
 }

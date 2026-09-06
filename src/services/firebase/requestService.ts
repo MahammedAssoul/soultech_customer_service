@@ -133,6 +133,8 @@ export async function getRequestedProductById(
 /**
  * Check whether a product has already been requested for a machine.
  * Matches by productId when available, otherwise by normalized name.
+ * Uses single-field queries only (no composite indexes); matching is done
+ * client-side.
  */
 export async function findRequestedProduct(
   machineId: string,
@@ -143,28 +145,25 @@ export async function findRequestedProduct(
   const db = getDb()
   const normalized = productName.trim().toLowerCase()
 
-  // Prefer matching by productId when provided.
-  if (productId) {
-    const q = query(
-      collection(db, REQUESTED_COLLECTION),
-      where('machineId', '==', machineId),
-      where('productId', '==', productId),
-    )
-    const snap = await getDocs(q)
-    const first = snap.docs[0]
-    if (first) return mapRequestedProduct(first)
-  }
-
-  // Fall back to a case-insensitive name match (client-side filter).
+  // Single-field filter only (auto-indexed), then match client-side.
   const q = query(
     collection(db, REQUESTED_COLLECTION),
     where('machineId', '==', machineId),
   )
   const snap = await getDocs(q)
-  const match = snap.docs.find(
-    (d) => String(d.data().productName ?? '').trim().toLowerCase() === normalized,
+  const docs = snap.docs.map(mapRequestedProduct)
+
+  // Prefer matching by productId when provided.
+  if (productId) {
+    const byId = docs.find((d) => d.product_id === productId)
+    if (byId) return byId
+  }
+
+  // Fall back to a case-insensitive name match (client-side filter).
+  const byName = docs.find(
+    (d) => String(d.product_name ?? '').trim().toLowerCase() === normalized,
   )
-  return match ? mapRequestedProduct(match) : null
+  return byName ?? null
 }
 
 export async function createRequestedProduct(
@@ -231,13 +230,11 @@ export async function hasVoted(
   voterId: string,
 ): Promise<boolean> {
   const db = getDb()
-  const q = query(
-    collection(db, VOTES_COLLECTION),
-    where('productRequestId', '==', productRequestId),
-    where('voterId', '==', voterId),
-  )
-  const snap = await getDocs(q)
-  return snap.size > 0
+  // Single-field filter only (auto-indexed). The vote id is
+  // `${productRequestId}_${voterId}`, so we can read the exact doc directly.
+  const voteRef = doc(db, VOTES_COLLECTION, `${productRequestId}_${voterId}`)
+  const snap = await getDoc(voteRef)
+  return snap.exists()
 }
 
 export async function getVoteCount(productRequestId: string): Promise<number> {

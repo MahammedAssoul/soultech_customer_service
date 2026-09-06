@@ -204,12 +204,27 @@ export type TranslationKey =
   | 'admin.machines.active'
   | 'admin.machines.inactive'
   | 'admin.machines.visitors'
+  | 'admin.tab.admins'
+  | 'admin.admins.title'
+  | 'admin.admins.subtitle'
+  | 'admin.admins.current'
+  | 'admin.admins.addLabel'
+  | 'admin.admins.addPlaceholder'
+  | 'admin.admins.add'
+  | 'admin.admins.adding'
+  | 'admin.admins.empty'
+  | 'admin.admins.remove'
+  | 'admin.admins.removeConfirm'
+  | 'admin.admins.you'
+  | 'admin.admins.failed'
   | 'contact.title'
   | 'contact.subtitle'
   | 'contact.call'
   | 'contact.callHint'
   | 'contact.whatsapp'
   | 'contact.whatsappHint'
+  | 'contact.facebook'
+  | 'contact.facebookHint'
   | 'contact.email'
   | 'contact.emailHint'
 
@@ -421,12 +436,27 @@ export const translations: Record<Language, Translation> = {
     'admin.machines.active': 'Active',
     'admin.machines.inactive': 'Hidden',
     'admin.machines.visitors': 'visitors',
+    'admin.tab.admins': 'Admins',
+    'admin.admins.title': 'Admin access',
+    'admin.admins.subtitle': 'Manage who can access this dashboard from any device.',
+    'admin.admins.current': 'This device',
+    'admin.admins.addLabel': 'Add an admin by UID',
+    'admin.admins.addPlaceholder': 'Paste the admin UID from the other device',
+    'admin.admins.add': 'Grant access',
+    'admin.admins.adding': 'Adding...',
+    'admin.admins.empty': 'No other admins yet.',
+    'admin.admins.remove': 'Revoke',
+    'admin.admins.removeConfirm': 'Revoke admin access for this user?',
+    'admin.admins.you': '(you)',
+    'admin.admins.failed': 'Could not update admins. Please try again.',
     'contact.title': 'Contact Us',
     'contact.subtitle': 'Reach out to us anytime — we\'re happy to help.',
     'contact.call': 'Call us',
     'contact.callHint': 'Speak to our support team',
     'contact.whatsapp': 'WhatsApp',
     'contact.whatsappHint': 'Chat with us on WhatsApp',
+    'contact.facebook': 'Facebook',
+    'contact.facebookHint': 'Follow us on Facebook',
     'contact.email': 'Email us',
     'contact.emailHint': 'Send us an email',
   },
@@ -635,12 +665,27 @@ export const translations: Record<Language, Translation> = {
     'admin.machines.active': 'نشطة',
     'admin.machines.inactive': 'مخفية',
     'admin.machines.visitors': 'زائر',
+    'admin.tab.admins': 'المسؤولون',
+    'admin.admins.title': 'صلاحية المسؤول',
+    'admin.admins.subtitle': 'إدارة من يمكنه الوصول إلى لوحة التحكم من أي جهاز.',
+    'admin.admins.current': 'هذا الجهاز',
+    'admin.admins.addLabel': 'إضافة مسؤول بواسطة المعرف',
+    'admin.admins.addPlaceholder': 'الصق معرف المسؤول من الجهاز الآخر',
+    'admin.admins.add': 'منح الصلاحية',
+    'admin.admins.adding': 'جارٍ الإضافة...',
+    'admin.admins.empty': 'لا يوجد مسؤولون آخرون بعد.',
+    'admin.admins.remove': 'إزالة',
+    'admin.admins.removeConfirm': 'إزالة صلاحية المسؤول لهذا المستخدم؟',
+    'admin.admins.you': '(أنت)',
+    'admin.admins.failed': 'تعذر تحديث المسؤولين. حاول مرة أخرى.',
     'contact.title': 'تواصل معنا',
     'contact.subtitle': 'تواصل معنا في أي وقت — يسعدنا مساعدتك.',
     'contact.call': 'اتصل بنا',
     'contact.callHint': 'تحدث مع فريق الدعم',
     'contact.whatsapp': 'واتساب',
     'contact.whatsappHint': 'راسلنا عبر واتساب',
+    'contact.facebook': 'فيسبوك',
+    'contact.facebookHint': 'تابعنا على فيسبوك',
     'contact.email': 'راسلنا',
     'contact.emailHint': 'أرسل لنا بريداً إلكترونياً',
   },

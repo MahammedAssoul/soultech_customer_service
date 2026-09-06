@@ -4,9 +4,24 @@ import { useI18n } from '../i18n/useI18n'
 export const CONTACT_PHONE = '+218910461043'
 export const CONTACT_WHATSAPP = '+218910461043'
 export const CONTACT_EMAIL = 'soultech4vending@gmail.com'
+export const CONTACT_FACEBOOK = 'https://www.facebook.com/share/19KGV9m5HW/?mibextid=wwXIfr'
 
 /** Digits only, for tel:/whatsapp links. */
 const PHONE_DIGITS = CONTACT_PHONE.replace(/\D/g, '')
+
+/** Official Facebook logo (brand color). */
+function FacebookIcon() {
+  return (
+    <svg
+      className="h-6 w-6"
+      viewBox="0 0 32 32"
+      fill="#1877F2"
+      aria-hidden="true"
+    >
+      <path d="M28 16a12 12 0 1 0-13.88 11.86v-8.39H10.9V16h3.22v-2.79c0-3.18 1.9-4.94 4.8-4.94 1.39 0 2.84.25 2.84.25v3.12h-1.6c-1.58 0-2.07.98-2.07 1.98V16h3.52l-.56 3.47h-2.96v8.39A12.01 12.01 0 0 0 28 16Z" />
+    </svg>
+  )
+}
 
 /** Official WhatsApp logo (brand color). */
 function WhatsAppIcon() {
@@ -58,7 +73,7 @@ export function ContactUs() {
         <span className="h-px flex-1 bg-line/70" aria-hidden="true" />
       </div>
 
-      <div className="mt-3 grid grid-cols-3 gap-2.5">
+      <div className="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
         <ContactIcon
           href={`tel:${CONTACT_PHONE}`}
           icon="📞"
@@ -74,6 +89,11 @@ export function ContactUs() {
           href={`mailto:${CONTACT_EMAIL}`}
           icon="✉️"
           label={t('contact.email')}
+        />
+        <ContactIcon
+          href={CONTACT_FACEBOOK}
+          icon={<FacebookIcon />}
+          label={t('contact.facebook')}
         />
       </div>
     </div>

@@ -1,7 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { useParams } from 'react-router-dom'
 import { ErrorState } from '../components/ErrorState'
-import { FileUploader } from '../components/FileUploader'
 import { IssueTypeCard } from '../components/IssueTypeCard'
 import { LoadingState } from '../components/LoadingState'
 import { PhoneInput } from '../components/PhoneInput'
@@ -40,7 +39,6 @@ export function IssuePage() {
 
   const [issueType, setIssueType] = useState<IssueTypeValue | null>(null)
   const [description, setDescription] = useState('')
-  const [photoUrl, setPhotoUrl] = useState<string | null>(null)
   const [phone, setPhone] = useState('')
   const [phoneInvalid, setPhoneInvalid] = useState(false)
 
@@ -95,7 +93,6 @@ export function IssuePage() {
         machine_id: loadState.machine.id,
         issue_type: issueType,
         description: description.trim() || undefined,
-        photo_url: photoUrl,
         customer_phone: trimmedPhone || null,
         reference_number: generateReference('ST'),
       })
@@ -185,8 +182,6 @@ export function IssuePage() {
                 className="input min-h-28 resize-none"
               />
             </div>
-
-            <FileUploader onUploaded={setPhotoUrl} />
 
             <PhoneInput
               value={phone}

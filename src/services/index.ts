@@ -189,3 +189,26 @@ export const requestService = {
       () => import('./firebase/requestService'),
     ).then((m) => m.getVoterId(...args)),
 }
+
+export const adminService = {
+  getAdminUid: (...args: Parameters<typeof import('./mock/mockAdminService')['getAdminUid']>) =>
+    load(
+      () => import('./mock/mockAdminService'),
+      () => import('./firebase/adminService'),
+    ).then((m) => m.getAdminUid(...args)),
+  listAdmins: (...args: Parameters<typeof import('./mock/mockAdminService')['listAdmins']>) =>
+    load(
+      () => import('./mock/mockAdminService'),
+      () => import('./firebase/adminService'),
+    ).then((m) => m.listAdmins(...args)),
+  addAdmin: (...args: Parameters<typeof import('./mock/mockAdminService')['addAdmin']>) =>
+    load(
+      () => import('./mock/mockAdminService'),
+      () => import('./firebase/adminService'),
+    ).then((m) => m.addAdmin(...args)),
+  removeAdmin: (...args: Parameters<typeof import('./mock/mockAdminService')['removeAdmin']>) =>
+    load(
+      () => import('./mock/mockAdminService'),
+      () => import('./firebase/adminService'),
+    ).then((m) => m.removeAdmin(...args)),
+}
